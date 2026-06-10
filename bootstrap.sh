@@ -4,7 +4,7 @@ set -euo pipefail
 BUILD_REPO="${BUILD_REPO:-https://github.com/OperaLinux/build.git}"
 BUILD_BRANCH="${BUILD_BRANCH:-main}"
 WORKDIR="${WORKDIR:-${PWD}/operalinux-build}"
-ISO_NAME="OperaLinux-x86_64.iso"
+ISO_NAME="${ISO_NAME:-OperaLinux-1.0.0-lynx-x86_64.iso}"
 CHANGE_HOST_REPOS="${OPERALINUX_CHANGE_HOST_REPOS:-0}"
 ARTIX_MIRROR="${ARTIX_MIRROR:-https://mirror1.artixlinux.org}"
 BACKUP_ROOT="/var/backups/operalinux-build-script"

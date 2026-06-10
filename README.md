@@ -21,7 +21,7 @@ Lo script:
 Output:
 
 ```text
-OperaLinux-x86_64.iso
+OperaLinux-1.0.0-lynx-x86_64.iso
 ```
 
 Modalita meno invasiva, senza cambiare `/etc/pacman.conf`:
@@ -75,6 +75,17 @@ File exceeds size limit of 4294967295 bytes: .../airootfs.sfs
 
 aggiorna la repo `https://github.com/OperaLinux/build/`: la ISO viene generata
 con `-iso-level 3`, necessario quando lo squashfs supera 4 GiB.
+
+Se la ISO si avvia ma cade in initramfs con:
+
+```text
+/dev/disk/by-label/OPERALINUX_100 device did not show up
+failed to setup loop device
+```
+
+aggiorna la repo `https://github.com/OperaLinux/build/`: il builder usa layout
+ArchISO standard `/arch/x86_64/airootfs.sfs`, valida `archisolabel` contro il
+volume ID e forza `loop`, `squashfs` e `overlay` nella initramfs live.
 
 Se compare:
 
