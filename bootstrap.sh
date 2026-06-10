@@ -62,17 +62,14 @@ install_artix_keyring() {
         return
     fi
 
-    log "Bootstrap artix-keyring e artix-mirrorlist"
-    local tmp keyring_url mirrorlist_url temp_conf
+    log "Bootstrap artix-keyring"
+    local tmp keyring_url temp_conf
     tmp="$(mktemp -d)"
 
     keyring_url="$(latest_artix_pkg_url artix-keyring)"
-    mirrorlist_url="$(latest_artix_pkg_url artix-mirrorlist)"
     [[ -n "$keyring_url" ]] || die "Impossibile trovare artix-keyring su ${ARTIX_MIRROR}"
-    [[ -n "$mirrorlist_url" ]] || die "Impossibile trovare artix-mirrorlist su ${ARTIX_MIRROR}"
 
     curl -fL "$keyring_url" -o "$tmp/${keyring_url##*/}"
-    curl -fL "$mirrorlist_url" -o "$tmp/${mirrorlist_url##*/}"
 
     temp_conf="$tmp/pacman-bootstrap.conf"
     cat > "$temp_conf" <<'EOF_CONF'
@@ -82,7 +79,7 @@ SigLevel = Never
 LocalFileSigLevel = Never
 EOF_CONF
 
-    pacman -U --config "$temp_conf" --noconfirm "$tmp"/*.pkg.tar.*
+    pacman -U --config "$temp_conf" --noconfirm "$tmp/${keyring_url##*/}"
     pacman-key --init
     pacman-key --populate archlinux artix
     rm -rf "$tmp"
