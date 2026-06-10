@@ -42,6 +42,10 @@ Per saltare il download automatico di Proton GE durante la build:
 curl -fsSL https://raw.githubusercontent.com/OperaLinux/build-script/main/bootstrap.sh | sudo INSTALL_PROTON_GE=0 bash
 ```
 
+Se GitHub o DNS non sono disponibili dentro la chroot, la build continua e
+`update-proton-ge` resta installato nella ISO per aggiornare Proton GE dopo il
+boot.
+
 Se compare:
 
 ```text
