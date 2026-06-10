@@ -13,7 +13,7 @@ Lo script:
 - fa backup della configurazione pacman;
 - cambia le repo host in Artix-first dopo conferma;
 - installa le dipendenze di build mancanti;
-- importa la keyring Artix necessaria a `pacstrap` senza installare `artix-mirrorlist`;
+- importa la keyring Artix con `--nodeps`, evitando il conflitto `artix-mirrorlist` / `pacman-mirrorlist`;
 - clona `https://github.com/OperaLinux/build.git`;
 - esegue `sudo ./build.sh`;
 - copia la ISO finale nella directory da cui hai lanciato il comando.

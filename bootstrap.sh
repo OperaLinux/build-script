@@ -79,7 +79,7 @@ SigLevel = Never
 LocalFileSigLevel = Never
 EOF_CONF
 
-    pacman -U --config "$temp_conf" --noconfirm "$tmp/${keyring_url##*/}"
+    pacman -U --config "$temp_conf" --noconfirm --nodeps "$tmp/${keyring_url##*/}"
     pacman-key --init
     pacman-key --populate archlinux artix
     rm -rf "$tmp"
