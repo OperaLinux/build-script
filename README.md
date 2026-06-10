@@ -41,3 +41,13 @@ Per saltare il download automatico di Proton GE durante la build:
 ```sh
 curl -fsSL https://raw.githubusercontent.com/OperaLinux/build-script/main/bootstrap.sh | sudo INSTALL_PROTON_GE=0 bash
 ```
+
+Se compare:
+
+```text
+config file /etc/pacman.d/mirrorlist-arch could not be read
+```
+
+aggiorna la repo `https://github.com/OperaLinux/build/`: il builder deve generare
+un `pacman.conf` temporaneo con mirrorlist locali al checkout, senza dipendere
+dai file pacman dell'host.
