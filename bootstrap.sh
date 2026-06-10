@@ -23,11 +23,11 @@ have() {
 }
 
 require_root() {
-    [[ "${EUID}" -eq 0 ]] || die "Esegui con sudo"
+    [[ "${EUID}" -eq 0 ]] || die "Run this script with sudo"
 }
 
 require_pacman_host() {
-    have pacman || die "Questo bootstrap richiede un host Arch/Artix con pacman"
+    have pacman || die "This bootstrap requires an Arch/Artix host with pacman"
 }
 
 backup_pacman_config() {
@@ -35,11 +35,11 @@ backup_pacman_config() {
     mkdir -p "$BACKUP_DIR"
     cp -a /etc/pacman.conf "$BACKUP_DIR/pacman.conf" 2>/dev/null || true
     cp -a /etc/pacman.d "$BACKUP_DIR/pacman.d" 2>/dev/null || true
-    log "Backup pacman salvato in $BACKUP_DIR"
+    log "Pacman backup saved in $BACKUP_DIR"
 }
 
 install_host_dependencies() {
-    log "Installazione dipendenze host"
+    log "Installing host dependencies"
     pacman -Sy --needed --noconfirm \
         git base-devel arch-install-scripts grub libisoburn mtools \
         squashfs-tools zstd curl jq tar gawk sed grep coreutils findutils util-linux psmisc
@@ -57,7 +57,7 @@ latest_artix_pkg_url() {
 
 install_artix_keyring() {
     if pacman -Q artix-keyring >/dev/null 2>&1; then
-        log "artix-keyring gia installato"
+        log "artix-keyring is already installed"
         pacman-key --populate artix archlinux >/dev/null 2>&1 || true
         return
     fi
@@ -67,7 +67,7 @@ install_artix_keyring() {
     tmp="$(mktemp -d)"
 
     keyring_url="$(latest_artix_pkg_url artix-keyring)"
-    [[ -n "$keyring_url" ]] || die "Impossibile trovare artix-keyring su ${ARTIX_MIRROR}"
+    [[ -n "$keyring_url" ]] || die "Could not find artix-keyring on ${ARTIX_MIRROR}"
 
     curl -fL "$keyring_url" -o "$tmp/${keyring_url##*/}"
 
@@ -86,7 +86,7 @@ EOF_CONF
 }
 
 write_artix_host_repos() {
-    log "Configurazione repo host Artix-first"
+    log "Configuring host repositories as Artix-first"
     backup_pacman_config
 
     install -Dm644 /dev/stdin /etc/pacman.d/mirrorlist <<'EOF_MIRRORS'
@@ -132,7 +132,7 @@ Include = /etc/pacman.d/mirrorlist-arch
 EOF_PACMAN
 
     pacman -Sy
-    log "Repo host aggiornate. Ripristino manuale possibile da $BACKUP_DIR"
+    log "Host repositories updated. Manual restore is available from $BACKUP_DIR"
 }
 
 confirm_repo_change() {
@@ -140,32 +140,32 @@ confirm_repo_change() {
         return
     fi
 
-    printf '\nATTENZIONE: stai per sostituire /etc/pacman.conf con repo Artix-first.\n'
-    printf 'Questo e utile per build/test OperaLinux, ma puo rendere il tuo host Arch un sistema misto.\n'
-    printf 'Sara creato un backup prima di ogni modifica.\n'
-    printf 'Scrivi CAMBIA REPO per continuare: '
+    printf '\nWARNING: this will replace /etc/pacman.conf with Artix-first repositories.\n'
+    printf 'This is useful for building/testing OperaLinux, but it can turn your Arch host into a mixed system.\n'
+    printf 'A backup will be created before any change is made.\n'
+    printf 'Type CHANGE REPOS to continue: '
     local reply
-    [[ -r /dev/tty ]] || die "Serve un terminale interattivo per confermare il cambio repo"
+    [[ -r /dev/tty ]] || die "An interactive terminal is required to confirm the repository change"
     read -r reply < /dev/tty
-    [[ "$reply" == "CAMBIA REPO" ]] || die "Cambio repo annullato"
+    [[ "$reply" == "CHANGE REPOS" ]] || die "Repository change cancelled"
 }
 
 clone_or_update_build_repo() {
     mkdir -p "$WORKDIR"
     if [[ -d "$WORKDIR/build/.git" ]]; then
-        log "Aggiornamento repo build in $WORKDIR/build"
+        log "Updating build repository in $WORKDIR/build"
         git -C "$WORKDIR/build" fetch origin "$BUILD_BRANCH"
         git -C "$WORKDIR/build" checkout "$BUILD_BRANCH"
         git -C "$WORKDIR/build" pull --ff-only
     else
-        log "Clone $BUILD_REPO in $WORKDIR/build"
+        log "Cloning $BUILD_REPO into $WORKDIR/build"
         rm -rf "$WORKDIR/build"
         git clone --branch "$BUILD_BRANCH" "$BUILD_REPO" "$WORKDIR/build"
     fi
 }
 
 run_build() {
-    log "Avvio build OperaLinux"
+    log "Starting OperaLinux build"
     chmod +x "$WORKDIR/build/build.sh"
     (
         cd "$WORKDIR/build"
@@ -176,12 +176,12 @@ run_build() {
 copy_iso_to_caller() {
     local built_iso="$WORKDIR/build/output/$ISO_NAME"
     local dest="${OUTPUT_ISO:-${PWD}/${ISO_NAME}}"
-    [[ -s "$built_iso" ]] || die "ISO non trovata: $built_iso"
+    [[ -s "$built_iso" ]] || die "ISO not found: $built_iso"
     cp -f "$built_iso" "$dest"
     if [[ -n "${SUDO_UID:-}" && -n "${SUDO_GID:-}" ]]; then
         chown "$SUDO_UID:$SUDO_GID" "$dest" || true
     fi
-    log "ISO pronta: $dest"
+    log "ISO ready: $dest"
 }
 
 main() {
