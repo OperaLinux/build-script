@@ -60,6 +60,16 @@ lo ripristina subito dopo.
 Se compare:
 
 ```text
+Forbidden service directory found
+```
+
+aggiorna la repo `https://github.com/OperaLinux/build/`: il builder rimuove
+automaticamente unit file e directory systemd impacchettati da dipendenze Arch
+prima della validazione finale OpenRC-only.
+
+Se compare:
+
+```text
 config file /etc/pacman.d/mirrorlist-arch could not be read
 ```
 
