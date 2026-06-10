@@ -67,6 +67,15 @@ aggiorna la repo `https://github.com/OperaLinux/build/`: il builder rimuove
 automaticamente unit file e directory systemd impacchettati da dipendenze Arch
 prima della validazione finale OpenRC-only.
 
+Se `xorriso` fallisce con:
+
+```text
+File exceeds size limit of 4294967295 bytes: .../airootfs.sfs
+```
+
+aggiorna la repo `https://github.com/OperaLinux/build/`: la ISO viene generata
+con `-iso-level 3`, necessario quando lo squashfs supera 4 GiB.
+
 Se compare:
 
 ```text
