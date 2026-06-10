@@ -42,7 +42,7 @@ install_host_dependencies() {
     log "Installazione dipendenze host"
     pacman -Sy --needed --noconfirm \
         git base-devel arch-install-scripts grub libisoburn mtools \
-        squashfs-tools zstd curl jq tar gawk sed grep coreutils findutils util-linux
+        squashfs-tools zstd curl jq tar gawk sed grep coreutils findutils util-linux psmisc
 }
 
 latest_artix_pkg_url() {
