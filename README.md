@@ -46,6 +46,17 @@ Se GitHub o DNS non sono disponibili dentro la chroot, la build continua e
 `update-proton-ge` resta installato nella ISO per aggiornare Proton GE dopo il
 boot.
 
+Se durante l'installazione di `yay-bin` compare:
+
+```text
+could not determine root mount point /
+not enough free disk space
+```
+
+aggiorna la repo `https://github.com/OperaLinux/build/`: il builder disattiva
+temporaneamente `CheckSpace` solo durante l'installazione di yay nella chroot e
+lo ripristina subito dopo.
+
 Se compare:
 
 ```text
